@@ -1,0 +1,271 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
+
+body{
+background:#050505;
+color:white;
+height:100vh;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+}
+
+/* HEADER */
+
+.header{
+height:60px;
+display:flex;
+align-items:center;
+padding:0 20px;
+background:#000;
+border-bottom:1px solid #111;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo-icon{
+width:28px;
+height:28px;
+border-radius:50%;
+background:linear-gradient(45deg,#007bff,#00c3ff);
+}
+
+/* LAYOUT */
+
+.layout{
+flex:1;
+display:grid;
+grid-template-columns:300px 1fr;
+height:calc(100vh - 60px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+background:#060606;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:15px;
+border-right:1px solid #111;
+}
+
+/* PLAYLIST */
+
+#playlist{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.track{
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+transition:0.2s;
+}
+
+.track:hover{
+background:#111;
+}
+
+.track.active{
+background:#007bff;
+}
+
+/* BOTÃO ADICIONAR */
+
+.addButton{
+margin-top:auto;
+background:linear-gradient(45deg,#007bff,#5f2bff);
+padding:12px;
+border-radius:8px;
+text-align:center;
+cursor:pointer;
+font-weight:600;
+transition:0.2s;
+}
+
+.addButton:hover{
+transform:scale(1.02);
+}
+
+/* PLAYER AREA */
+
+.playerArea{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:16px;
+}
+
+/* DISCO */
+
+#vinyl{
+width:200px;
+height:200px;
+border-radius:50%;
+background:radial-gradient(circle,#222,#000);
+border:6px solid #111;
+animation:spin 6s linear infinite;
+animation-play-state:paused;
+position:relative;
+}
+
+#vinyl::after{
+content:"";
+position:absolute;
+width:30px;
+height:30px;
+background:#007bff;
+border-radius:50%;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+@keyframes spin{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
+
+/* VISUALIZER */
+
+.visualizer{
+width:420px;
+height:100px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+#visualizerCanvas{
+width:100%;
+height:100%;
+}
+
+/* TRACK INFO */
+
+.trackInfo{
+text-align:center;
+max-width:600px;
+}
+
+.trackInfo h2{
+font-size:18px;
+line-height:1.3;
+}
+
+/* PROGRESS BAR */
+
+#progressBar{
+width:420px;
+height:4px;
+appearance:none;
+background:#333;
+border-radius:4px;
+}
+
+#progressBar::-webkit-slider-thumb{
+appearance:none;
+width:14px;
+height:14px;
+background:#007bff;
+border-radius:50%;
+cursor:pointer;
+}
+
+/* TEMPO */
+
+.time{
+width:420px;
+display:flex;
+justify-content:space-between;
+font-size:12px;
+color:#aaa;
+}
+
+/* CONTROLES */
+
+.controls{
+display:flex;
+gap:20px;
+}
+
+.controls button{
+width:52px;
+height:52px;
+border-radius:50%;
+background:#111;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.controls button:hover{
+background:#007bff;
+transform:scale(1.1);
+}
+
+/* VOLUME */
+
+.volumeContainer{
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:5px;
+}
+
+#volumeBar{
+width:160px;
+height:4px;
+appearance:none;
+background:#333;
+border-radius:4px;
+}
+
+#volumeBar::-webkit-slider-thumb{
+appearance:none;
+width:12px;
+height:12px;
+border-radius:50%;
+background:#007bff;
+cursor:pointer;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:900px){
+
+.layout{
+grid-template-columns:1fr;
+grid-template-rows:200px 1fr;
+}
+
+.sidebar{
+border-right:none;
+border-bottom:1px solid #111;
+}
+
+.visualizer,
+#progressBar,
+.time{
+width:90%;
+}
+
+}
