@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WaveTune</title>
+
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="src/css/style.css">
+
+<meta name="theme-color" content="#0b0f1a">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- PLAYLIST -->
+
+<aside class="sidebar">
+
+<h1 class="logo">WaveTune</h1>
+
+<input
+type="file"
+id="file-input"
+multiple
+accept="audio/*"
+hidden
+>
+
+<button id="upload-btn">
+Adicionar músicas
+</button>
+
+<ul id="playlist"></ul>
+
+</aside>
+
+<!-- PLAYER -->
+
+<main class="player">
+
+<canvas id="visualizer"></canvas>
+
+<h2 id="track-title">
+Selecione uma música
+</h2>
+
+<div class="controls">
+
+<button id="prev">
+⏮
+</button>
+
+<button id="play">
+▶
+</button>
+
+<button id="next">
+⏭
+</button>
+
+</div>
+
+<input
+id="progress"
+type="range"
+min="0"
+max="100"
+value="0"
+>
+
+</main>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+<span>
+Volume
+</span>
+
+<input
+id="volume"
+type="range"
+min="0"
+max="1"
+step="0.01"
+value="1"
+>
+
+<button id="fullscreen">
+⛶
+</button>
+
+</footer>
+
+<!-- SCRIPTS -->
+
+<script src="src/js/playlist.js"></script>
+
+<script src="src/js/player.js"></script>
+
+<script src="src/js/ui.js"></script>
+
+<script src="src/js/visualizer.js"></script>
+
+<!-- SERVICE WORKER -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+window.addEventListener("load", () => {
+
+navigator.serviceWorker.register("sw.js")
+
+})
+
+}
+
+</script>
+
+</body>
+</html>

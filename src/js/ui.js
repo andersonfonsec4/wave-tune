@@ -1,33 +1,183 @@
-export function renderPlaylist(playlist,element,handlers){
+const playlistUI = document.getElementById("playlist")
 
-element.innerHTML=""
+const uploadBtn = document.getElementById("upload-btn")
+const fileInput = document.getElementById("file-input")
 
-playlist.tracks.forEach((track,index)=>{
+const playBtn = document.getElementById("play")
+const nextBtn = document.getElementById("next")
+const prevBtn = document.getElementById("prev")
 
-const item=document.createElement("div")
+const progress = document.getElementById("progress")
+const volume = document.getElementById("volume")
+const fullscreenBtn = document.getElementById("fullscreen")
 
-item.className="track"
+const title = document.getElementById("track-title")
 
-if(index===playlist.currentIndex)
-item.classList.add("active")
+let dragIndex = null
 
-item.textContent=track.name
+uploadBtn.onclick = () => fileInput.click()
 
-item.onclick=()=>handlers.play(index)
+fileInput.addEventListener("change",(e)=>{
 
-element.appendChild(item)
+const files = e.target.files
+
+for(let file of files){
+
+playlist.push({
+
+title:file.name,
+file:URL.createObjectURL(file)
 
 })
 
 }
 
-export function formatTime(time){
+render()
 
-if(!time)return"0:00"
+})
 
-const m=Math.floor(time/60)
-const s=Math.floor(time%60)
+function render(){
 
-return`${m}:${s.toString().padStart(2,"0")}`
+playlistUI.innerHTML=""
+
+playlist.forEach((track,i)=>{
+
+const li=document.createElement("li")
+
+li.draggable=true
+
+const name=document.createElement("span")
+name.textContent=track.title
+
+/* clicar toca música */
+
+name.onclick=()=>{
+
+player.load(i)
+player.play()
+
+updateTitle()
+
+highlight(li)
+
+}
+
+/* botão excluir */
+
+const remove=document.createElement("button")
+
+remove.textContent="✕"
+
+remove.className="remove"
+
+remove.onclick=(e)=>{
+
+e.stopPropagation()
+
+playlist.splice(i,1)
+
+render()
+
+}
+
+/* drag */
+
+li.addEventListener("dragstart",()=>{
+
+dragIndex=i
+
+})
+
+li.addEventListener("dragover",(e)=>{
+
+e.preventDefault()
+
+})
+
+li.addEventListener("drop",()=>{
+
+const item=playlist.splice(dragIndex,1)[0]
+
+playlist.splice(i,0,item)
+
+render()
+
+})
+
+li.appendChild(name)
+li.appendChild(remove)
+
+playlistUI.appendChild(li)
+
+})
+
+}
+
+function highlight(el){
+
+document.querySelectorAll("#playlist li").forEach(li=>{
+
+li.classList.remove("active")
+
+})
+
+el.classList.add("active")
+
+}
+
+function updateTitle(){
+
+if(playlist[player.index]){
+
+title.textContent=playlist[player.index].title
+
+}
+
+}
+
+playBtn.onclick=()=>{
+
+player.toggle()
+
+playBtn.textContent=player.audio.paused?"▶":"⏸"
+
+}
+
+nextBtn.onclick=()=>player.next()
+prevBtn.onclick=()=>player.prev()
+
+player.audio.ontimeupdate=()=>{
+
+if(player.audio.duration){
+
+progress.value=(player.audio.currentTime/player.audio.duration)*100
+
+}
+
+}
+
+progress.oninput=()=>{
+
+player.audio.currentTime=(progress.value/100)*player.audio.duration
+
+}
+
+volume.oninput=()=>{
+
+player.audio.volume=volume.value
+
+}
+
+fullscreenBtn.onclick=()=>{
+
+if(!document.fullscreenElement){
+
+document.documentElement.requestFullscreen()
+
+}else{
+
+document.exitFullscreen()
+
+}
 
 }

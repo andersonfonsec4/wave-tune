@@ -1,61 +1,49 @@
-export class Visualizer{
+const canvas=document.getElementById("visualizer")
+const ctx=canvas.getContext("2d")
 
-constructor(audio,canvas){
+canvas.width=800
+canvas.height=200
 
-this.audio=audio
-this.canvas=canvas
+const audioCtx=new AudioContext()
 
-this.canvas.width=canvas.offsetWidth
-this.canvas.height=canvas.offsetHeight
+const analyser=audioCtx.createAnalyser()
 
-this.ctx=canvas.getContext("2d")
+const source=audioCtx.createMediaElementSource(player.audio)
 
-this.audioCtx=new AudioContext()
+source.connect(analyser)
+analyser.connect(audioCtx.destination)
 
-this.source=this.audioCtx.createMediaElementSource(audio)
-this.analyser=this.audioCtx.createAnalyser()
+analyser.fftSize=256
 
-this.source.connect(this.analyser)
-this.analyser.connect(this.audioCtx.destination)
+const bufferLength=analyser.frequencyBinCount
+const dataArray=new Uint8Array(bufferLength)
 
-this.analyser.fftSize=128
+function draw(){
 
-this.bufferLength=this.analyser.frequencyBinCount
-this.dataArray=new Uint8Array(this.bufferLength)
+requestAnimationFrame(draw)
 
-this.animate()
+analyser.getByteFrequencyData(dataArray)
 
-}
+ctx.fillStyle="#000"
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-animate(){
+const barWidth=canvas.width/bufferLength
 
-requestAnimationFrame(()=>this.animate())
+for(let i=0;i<bufferLength;i++){
 
-this.analyser.getByteFrequencyData(this.dataArray)
+const barHeight=dataArray[i]
 
-this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
+const gradient=ctx.createLinearGradient(0,0,0,200)
 
-const barWidth=this.canvas.width/this.bufferLength
+gradient.addColorStop(0,"#4c4cff")
+gradient.addColorStop(1,"#9a4cff")
 
-let x=0
+ctx.fillStyle=gradient
 
-for(let i=0;i<this.bufferLength;i++){
-
-const h=this.dataArray[i]
-
-this.ctx.fillStyle="#007bff"
-
-this.ctx.fillRect(
-x,
-this.canvas.height-h/2,
-barWidth-2,
-h/2
-)
-
-x+=barWidth
+ctx.fillRect(i*barWidth,200-barHeight,barWidth-1,barHeight)
 
 }
 
 }
 
-}
+draw()
